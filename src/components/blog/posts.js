@@ -1,10 +1,9 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 import Post from "./post";
-import SinglePost from "./singlePost";
 import Loader from "../layout/loader";
 import { Container, Col, Row } from "react-bootstrap";
-
 export class posts extends Component {
   state = {
     posts: [],
@@ -21,7 +20,7 @@ export class posts extends Component {
       return this.state.posts.map((post) => {
         return (
           <Col md={6} lg={4} key={post.id}>
-            <Post post={post} openModel={this.openModel} />
+            <Post post={post} openModel={this.openModel} {...this.props} />
           </Col>
         );
       });
@@ -50,13 +49,8 @@ export class posts extends Component {
           </Col>
         </Row>
         <Row>{this.renderPosts()}</Row>
-        <SinglePost
-          showModel={this.state.showModel}
-          closeModelHandler={this.closeModelHandler}
-          id={this.state.currentId}
-        />
       </Container>
     );
   }
 }
-export default posts;
+export default withRouter(posts);

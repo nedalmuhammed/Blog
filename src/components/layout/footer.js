@@ -1,5 +1,4 @@
 import React from "react";
-
 const footer = () => {
   return (
     <footer className="bg-light p-4 d-flex justify-content-center">

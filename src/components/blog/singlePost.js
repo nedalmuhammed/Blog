@@ -1,50 +1,46 @@
-import React, { Component } from 'react'
-import { Button, Modal } from 'react-bootstrap'
-import axios from 'axios';
-
+import React, { Component } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import Loader from "../layout/loader";
+import axios from "axios";
+import Head from "./head";
 export class singlePost extends Component {
-    state = {
-        post: null
+  state = {
+    post: null,
+  };
+  componentDidMount() {
+    console.log(this.props.match.params.id);
+    const postId = this.props.match.params.id
+      ? this.props.match.params.id
+      : null;
+    if (postId) {
+      axios
+        .get("https://jsonplaceholder.typicode.com/posts/" + postId)
+        .then((res) => {
+          console.log(res.data);
+          this.setState({ post: res.data });
+        });
     }
-    componentDidUpdate = (prevProps) => {
-        if (this.props.id && this.props.id !== prevProps.id) {
-            axios.get("https://jsonplaceholder.typicode.com/posts/" + this.props.id)
-                .then((res) => {
-                    this.setState({ post: res.data })
-                })
-        }
+  }
+  renderPost = () => {
+    if (this.state.post) {
+      return (
+        <>
+          <Head title={this.state.post.title} />
+          <Container>
+            <Row>
+              <Col>
+                <p>{this.state.post.body}</p>
+              </Col>
+            </Row>
+          </Container>
+        </>
+      );
+    } else {
+      return <Loader />;
     }
-    renderPost = () => {
-        if (this.state.post) {
-            return (
-                <Modal
-                    show={this.props.showModel}
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                    onHide={this.props.closeModelHandler}
-                    animation={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                            <h3> {this.state.post.title}</h3>
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>{this.state.post.body}</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.closeModelHandler}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
-            );
-        }
-    }
-    render() {
-        return (
-            <>
-                {this.renderPost()}
-            </>
-        )
-    }
+  };
+  render() {
+    return <> {this.renderPost()} </>;
+  }
 }
-export default singlePost
+export default singlePost;
